@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting started with Go</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a></div>
+          <h1 id="blogtitle">Getting started with Go</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>The goal of this assignment is to get you up and running with Go. When using Go, there is no single integrated tool that allows you to write, test, and run your code as easily as you could with DrRacket. Instead, you’ll install several things: the Go <i>compiler</i> (to translate Go code into machine code), a text editor (to write your Go code), and some useful tools that will help you locate errors and format your work. Then, in order to make sure everything is installed correctly, you’ll write a simple program introducing yourself.</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Setting up</h3><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Install the tools</span></h4><p>You’ll need to install two things for this semester in CS 2.</p></div></div><ol><li><p>The Go compiler. Go to <a href="http://golang.org">http://golang.org</a> and download the version for your operating system. Run the installer.</p></li><li><p>A text editor. I recommend <a href="http://code.visualstudio.com">Visual Studio Code</a>. Once you’ve downloaded it, you’ll need to run a few commands.</p><p>Press Cmd+Shift+P (on a Mac) or Ctrl+Shift+P (on Windows) to open the command prompt. Type “Shell” and select “Shell Command: Install code command in PATH.” (This may not work on Windows; that’s OK.)</p><p>Once this has installed, go to the Package view (click the square icon on the lefthand bar, right under the “debug” icon), and find the Go package (the description says, “Rich Go language support for Visual Studio Code”). Install it, then click “Reload” to complete the installation.</p><p>Open the command prompt again (Cmd or Ctrl + Shift + P), and type “Go install”; select “Go: Install/update tools.” This will install a number of useful tools for you.</p></li></ol><p>You should be ready to go!</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Set up your Go directory</span></h4><p>To use Go, your files must be organized in a very specific way. To set up, do the following:</p></div><ol><li><p>If on Windows, install Git for Windows (<a href="https://git-for-windows.github.io">https://git-for-windows.github.io</a>).</p></li><li><p>Open your system command line terminal. On Mac, this is an app called “Terminal.” On Windows, please use “Git Bash,” which should have been installed in the previous step.</p></li><li><p>Once there, type <code>cd ~</code> and press Enter. This will move you to your home directory, or home folder.</p></li><li><p>Type <code>mkdir -p go/src/sample</code>. Press enter. This creates a folder called “go” inside your home directory, a folder called “src” inside that, and a folder called “sample” inside that. <em>For every Go program that you write, you will create a new folder inside the “src” folder.</em> “sample” is the program you will write now.</p></li><li><p>Type <code>code go/src/sample</code>, which will open Visual Studio Code to the new directory you’ve created. Use the “new file” icon in the sidebar to create a file called <code>sample.go</code> inside the directory. Type the following:</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">"fmt"</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Hello, world!"</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div></td></tr></tbody></table></div></li><li><p>Press <code>Ctrl+`</code> (that’s the backtick character, same key as <code>~</code>) to open the Terminal inside Visual Studio Code. Type <code>go build</code>, and press enter. This will compile your program into a machine-code file called <code>sample</code> (on Windows, <code>sample.exe</code>). You can run it by typing <code>./sample</code> (or <code>./sample.exe</code> on Windows) and pressing enter. You should see “Hello, world!” printed to the screen.</p></li></ol><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">A program about yourself</span></h4><p>Create another folder in the same way you created <code>sample</code>, this time called <code>aboutme</code>. Open it in Visual Studio Code. Create a file called <code>YourNameAboutMe.go</code>, and inside, write a program that prints out the answers to the following questions:</p></div><ol><li><p>How was your summer? What was the best or worst experience you had?</p></li><li><p>Do you see any way these instructions be better? Any suggestions?</p></li><li><p>Is there anything else you’d like to say / like me to know?</p></li></ol><p>Upload the file to Google Classroom. Leave a comment on Classroom telling me whether you tested your code (e.g. “I ran my program and it worked” or “I could not get it to compile; I kept getting xyz error.“)</p></div>
+  </section>
+</body>

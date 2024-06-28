@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111705087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111705087-1');
+  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A homework assignment from AP CSP at Commonwealth School. Use Go's interfaces to create a program for graphing mathematical expressions.">
+  <title>Graphing expressions</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a><span class="breadcrumb-divider"></span><a href="/cs2.html">CS 2</a></div>
+          <h1 id="blogtitle">Graphing expressions</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment Overview</h3><p>In this assignment, you will create a program for graphing simple functions. You will make heavy use of interfaces, both your own interfaces and ones provided by the Go standard library. There are two main components:</p></div><ol><li><p>An <code>Expr</code> (or <b>expression</b>) type, which represents a mathematical function of one variable, for example, <code>x + 2</code>, or <code>3 * x * (x + 7)</code>. An expression can <code>Eval</code> itself on a particular value of <code>x</code>, returning a number, and it can <code>String</code> itself (producing a string like “x + 2”).</p></li><li><p>A <code>Graph</code> struct that implements the <code>image.Image</code> interface. A <code>Graph</code> holds an <code>Expr</code> and some settings, like how big the graph should be and how its axes are arranged.</p></li></ol><div class="nobreak"><h3 class="assignment-heading keep-with-next">Instructions</h3><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">The expression interface</span></h4><p>Declare an interface for expressions, <code>Expr</code>. An expression should be able to <code>String() string</code> itself, and <code>Eval(x float64) float64</code> its value at a certain float64 value of x.</p></div></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">The concrete expression types</span></h4><p>Implement each of the following expression types as you please:</p></div><ul><li><p><code>Constant</code>, an expression representing a constant number, like 2.3 or -50. This should <code>Eval</code> to itself, no matter what <code>x</code> is. The <code>String</code> function should just return a String version of this number. (Use <code>fmt.Sprintf</code>.)</p></li><li><p><code>Negative</code>, an expression representing the negation of another expression. (You must, of course, store that other expression.) This should print out as <code>-BLAH</code>, where <code>BLAH</code> is whatever the subexpression prints out as. It should evaluate to the negative of whatever the other expression evaluates to.</p></li><li><p><code>BinaryOperation</code>, an expression consisting of two sub-expressions and a binary operation, either <code>+</code>, <code>-</code>, <code>*</code>, or <code>/</code>. This should print as <code>(e1 op e2)</code>, where <code>e1</code> and <code>e2</code> are the string versions of the two sub-expressions, and <code>op</code> is the operation.</p></li><li><p><code>Variable</code>, which represents a variable. (You might choose to implement this as <code>type Variable string</code>, where the string is the name of the variable, like “x” or “y”. Just note that your program only supports one variable; you can call it <code>x</code> or <code>y</code> or whatever, but it’s all the same thing.) It evaluates to whatever <code>x</code> is passed into the <code>Eval</code> method; it prints out as <code>x</code> (or whatever the variable name is).</p></li></ul><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">The Graph type</span></h4><p>Write a struct type, <code>Graph</code>, that stores an expression, and some settings: a height and width in pixels, as well as a MinX, MaxX, MinY, and MaxY for the “axes” of the graph. Implement the three methods required for the Image interface:</p></div><ol><li><p><code>ColorModel() color.Model</code>–you can just return <code>color.GrayModel</code>.</p></li><li><p><code>Bounds() Rectangel</code>–use <code>image.Rect(0, 0, w, h)</code> to return the width and height of your image in pixels.</p></li><li><p><code>At(x, y int) color.Color</code>–the hard one. Given an (x, y) coordinate, decide what color to paint that pixel of the image. To do this, you need to first figure out what “real value” x corresponds to. If x is the 5th pixel in a 100-pixel image, and the axis goes from MinX = 0 to MaxX = 20, then x = 5 really corresponds to x = 1, 1/20th of the way across the axis. Once you have this, you need to evaluate your Expr at this point. This will give you a y value. Calculate what pixel that y value would land on, based on the y axis’s scale. If that pixel number is the y value passed in to you, return black (<code>color.Gray{0}</code>). Otherwise, return white (<code>color.Gray{255}</code>).</p></li></ol><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">4</span><span class="problem-name">Main function</span></h4><p>In your main function, create a few expressions, and save them to files using code like the following:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">e1</span> <span class="nx">Expr</span> <span class="p">=</span> <span class="o">...</span>
+  <span class="kd">var</span> <span class="nx">e2</span> <span class="nx">Expr</span> <span class="p">=</span> <span class="o">...</span>
+
+  <span class="kd">var</span> <span class="nx">graph1</span> <span class="p">=</span> <span class="nx">Graph</span><span class="p">{</span><span class="nx">e1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+  <span class="kd">var</span> <span class="nx">graph2</span> <span class="p">=</span> <span class="nx">Graph</span><span class="p">{</span><span class="nx">e2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+
+  <span class="nx">f1</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Create</span><span class="p">(</span><span class="s">"graph1.png"</span><span class="p">)</span>
+  <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">"Error opening graph1.png"</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="nx">png</span><span class="p">.</span><span class="nx">Encode</span><span class="p">(</span><span class="nx">f1</span><span class="p">,</span> <span class="nx">graph1</span><span class="p">)</span>
+  <span class="nx">f1</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+  <span class="nx">f2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Create</span><span class="p">(</span><span class="s">"graph2.png"</span><span class="p">)</span>
+  <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">"Error opening graph2.png"</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="nx">png</span><span class="p">.</span><span class="nx">Encode</span><span class="p">(</span><span class="nx">f2</span><span class="p">,</span> <span class="nx">graph2</span><span class="p">)</span>
+  <span class="nx">f2</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div></td></tr></tbody></table></div></div>
+  </section>
+</body>

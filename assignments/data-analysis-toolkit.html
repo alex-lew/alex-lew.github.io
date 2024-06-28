@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111705087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111705087-1');
+  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A homework assignment from CS 1 at Commonwealth School. Use higher-order functions to analyze CSV files in Racket.">
+  <title>A data analysis toolkit</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a><span class="breadcrumb-divider"></span><a href="/cs1.html">CS 1</a></div>
+          <h1 id="blogtitle">A data analysis toolkit</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>In this homework, you will be developing and using a toolkit for data analysis.</p></div><p>In class, we wrote two functions, <code>extract</code> and <code>where</code>, that allow you to write nice-sounding, English-like expressions for analyzing data, for instance</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="c1">; Extract the "WORD" field from all entries with Part Of Speech</span>
+<span class="c1">; equal to "pron".</span>
+<span class="p">(</span><span class="nb">map</span>
+  <span class="p">(</span><span class="n">extract</span> <span class="s2">"WORD"</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">filter</span>
+     <span class="p">(</span><span class="n">where</span> <span class="s2">"PART OF SPEECH"</span> <span class="nb">string=?</span> <span class="s2">"pron"</span><span class="p">)</span>
+     <span class="n">DATASET</span><span class="p">))</span>
+</pre></div></td></tr></tbody></table></div><p>This pattern, of mapping an <code>extract</code> function over a filtered version of a dataset, is so common, that it can be useful to define another function that does exactly that:</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="c1">; from : (Listof DataEntry) (DataEntry -&gt; Type1) (DataEntry -&gt; Bool) -&gt; (Listof Type1)</span>
+<span class="c1">; Takes in a function, a predicate, and a list, and performs</span>
+<span class="c1">; the function on everything satisfying the predicate in the list</span>
+<span class="c1">; (deleting everything else).</span>
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">from</span> <span class="n">dataset</span> <span class="n">mapping-func</span> <span class="n">filtering-func</span><span class="p">)</span>
+   <span class="p">(</span><span class="nb">map</span> <span class="n">mapping-func</span> <span class="p">(</span><span class="nb">filter</span> <span class="n">filtering-func</span> <span class="n">dataset</span><span class="p">)))</span>
+</pre></div></td></tr></tbody></table></div><p>With this function, we can write things like</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">from</span> <span class="n">DATASET</span>
+  <span class="p">(</span><span class="n">extract</span> <span class="s2">"WORD"</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">where</span> <span class="s2">"PART OF SPEECH"</span> <span class="nb">string=?</span> <span class="s2">"pron"</span><span class="p">))</span>
+</pre></div></td></tr></tbody></table></div><p>which is starting to sound very English-like!  Note that this function looks cool, but is quite simple. We are simply mapping the <code>(extract "WORD")</code> function over the list of data entries, filtering out anything that’s not a pronoun using the <code>(where "PART OF SPEECH" string=? "pron")</code> predicate.</p><div class="nobreak"><h3 class="assignment-heading keep-with-next">Improved where clauses</h3><p>We will now focus on allowing more complex “where” clauses in our toolkit.</p></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Combining predicates</span></h4><p>The <code>where</code> function we wrote in class allows you to check that one field satisfies a condition. Ideally, we would be able to combine predicates to check multiple conditions. For example, we might want to find words with frequency greater than 100,000 that are nouns. We can write <code>(where "PART OF SPEECH" string=? "n")</code> to make a noun-checking predicate, and <code>(where "FREQUENCY" &gt; 100000)</code> to make a frequency-checking predicate. Now we need some way to combine them, to say, both of these things must be true. In other cases, we might want to check that <i>either</i> one condition <i>or</i> the other must be true.</p></div><p>Write the functions <code>where-and</code> and <code>where-or</code>, which each take in two existing where clauses (i.e., predicates), and produce a single predicate.</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="c1">; where-and : (Type1 → Boolean) (Type1 → Boolean) → (Type1 → Boolean)</span>
+<span class="c1">; Produces a predicate that is true only when both of the argument</span>
+<span class="c1">; predicates are satisfied.</span>
+
+<span class="c1">; Examples:</span>
+<span class="c1">; (where-and (where "RANK" &lt; 100) (where "PART OF SPEECH" string=? "n"))</span>
+<span class="c1">;     Says #true for data-entries that are nouns with rank less than 100.</span>
+<span class="c1">;</span>
+<span class="c1">; (where-and even? divisible-by-three?)</span>
+<span class="c1">;     Says #true for numbers that even and divisible by three.</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">where-and</span> <span class="n">clause1</span> <span class="n">clause2</span><span class="p">)</span>
+  <span class="k">...</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="c1">; where-or : (Type1 → Boolean) (Type1 → Boolean) → (Type1 → Boolean)</span>
+<span class="c1">; Produces a predicate that is true when either of the argument</span>
+<span class="c1">; predicates are satisfied.</span>
+
+<span class="c1">; Example:</span>
+<span class="c1">; (where-or even? odd?)</span>
+<span class="c1">;     Says #true for any integer</span>
+<span class="c1">;</span>
+<span class="c1">; (where-or (where "RANK" &lt; 10) (where "FREQUENCY" = 800))</span>
+<span class="c1">;    Says #true for any words that have frequency 800 OR rank &lt; 10</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">where-or</span> <span class="n">clause1</span> <span class="n">clause2</span><span class="p">)</span>
+  <span class="k">...</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Checking a transformation of a field</span></h4><p>Write the function <code>where-transformed</code>, which allows you to apply some transformation function to a field before comparing it to a value. This is clearest with examples:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">where-transformed</span> <span class="nb">string-length</span> <span class="s2">"WORD"</span> <span class="nb">&gt;</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>would be a predicate that checks if the <code>string-length</code> of the WORD field is greater than 5. Similarly,</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">where-map</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="n">string-ith</span> <span class="n">x</span> <span class="mi">0</span><span class="p">))</span> <span class="s2">"WORD"</span> <span class="nb">equal?</span> <span class="s2">"a"</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>would check if the WORD field begins with an <code>"a"</code>. (You can check the vanilla <code>where</code> function’s code as a starting point.)</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">A do-nothing <code>where</code> clause</span></h4><p>Sometimes, we don’t want to use a where clause–we want to get <i>all</i> rows from the database. Write a function <code>all-rows</code> that can be used as follows:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">from</span> <span class="n">DATASET</span> <span class="p">(</span><span class="n">extract</span> <span class="s2">"WORD"</span><span class="p">)</span> <span class="n">all-rows</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>This command would extract the “WORD” field of every row. In other words, <code>all-rows</code> is basically a where clause that says “Yes” to every row, so all of them are included in the answer.</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">4</span><span class="problem-name">Comparing two fields</span></h4><p>Sometimes, we wish to compare two fields of a dataset. For example, if we have a dataset of children where each row has a “favorite adult” field and a “mom” field, and we want to see all the children whose favorite adult is their mom.</p></div><p>We might like to write something like</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">from</span> <span class="n">DATASET</span>
+  <span class="p">(</span><span class="n">extract</span> <span class="s2">"CHILD NAME"</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">where-compare</span> <span class="s2">"FAVORITE ADULT"</span> <span class="nb">equal?</span> <span class="s2">"MOM"</span><span class="p">))</span>
+</pre></div></td></tr></tbody></table></div><p>Write the <code>where-compare</code> function.</p><div class="nobreak"><h3 class="assignment-heading keep-with-next">Analysis</h3><p>Now it’s time to put your toolkit to use.</p></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">5</span><span class="problem-name">Analyzing a dataset</span></h4><p>Choose one dataset, linked below, download it, and write functions to answer the corresponding question about it. In addition, write and answer one more question about your dataset.</p></div><p>Hints:</p><ul><li><p>Right click on the link and choose “Download linked file as…” or “Save link as…” to download the data file. (On a Mac, if you have no right click, you can hold down the control key and then click.)</p></li><li><p>Make sure your Racket file is in the same folder as the dataset file.</p></li><li><p>In your Racket file, make sure that <code>(read-csv-file …)</code> is being called on the correct file.</p></li></ul><div class="nobreak"><h3 class="assignment-heading keep-with-next">Datasets</h3><ul><li><p><a href="http://www.crowdflower.com/wp-content/uploads/2016/03/Oscars-demographics-DFE.csv">Academy Awards Demographics</a><br/>Write a function that takes in a category (“Best Actor”, etc.) and calculates the average age of a winner in that category.</p></li><li><p><a href="http://www.crowdflower.com/wp-content/uploads/2016/03/McDonalds-Yelp-Sentiment-DFE.csv">McDonald’s Reviews</a><br/>Write a function that takes in a city and returns the average length of a review from someone in that city.</p></li><li><p><a href="http://www.crowdflower.com/wp-content/uploads/2016/03/blockbuster-top_ten_movies_per_year_DFE.csv">Blockbuster Database</a><br/>Write a function that calculates the average amount of money made by a movie with a given rating (“G”, “PG”, etc.)</p></li><li><p><a href="http://www.crowdflower.com/wp-content/uploads/2016/03/police-KBP-2013-14-15-FULL-DFE.csv">Police-Involved Fatalities Since May 2013</a><br/>Of all fatalities in which the deceased was potentially unarmed (i.e., “Unarmed?” column is not “No”), in what percent of them was the deceased white and in what percent non-white?</p></li></ul></div></div>
+  </section>
+</body>

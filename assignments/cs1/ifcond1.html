@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111705087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111705087-1');
+  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A homework assignment from CS 1 at Commonwealth School. Practicing using Racket's IF and COND keywords to evaluate expressions conditionally in animations and other functions.">
+  <title>Booleans and conditionals</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a><span class="breadcrumb-divider"></span><a href="/cs1.html">CS 1</a></div>
+          <h1 id="blogtitle">Booleans and conditionals</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>In this assignment, you’ll warm up by writing a couple functions using <code>if</code> and <code>cond</code>, then you’ll create some more sophisticated animations that these features enable.</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Submission instructions</h3><p>Please write the following functions (with contracts) in a file called <code>YourNameBooleans1.rkt</code>. Upload this file to Google Classroom, and leave me a comment (on Classroom) explaining how you tested your code (<em>e.g.</em>, “I tested out each function in the interactions area”) and what happened (<em>e.g.</em>, “they all worked!“).</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Problems</h3><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Wide or tall?</span></h4><p>Design a function that takes in an image as input, and returns a string describing the shape of the image as “wide”, “tall”, or “square”. An image is considered wide if it is wider than it is tall; tall if it is taller than it is wide; and square if has equal width and height.</p></div></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Leap year</span></h4><p>Design a function that takes in a number representing a year (<em>e.g.</em> <code>1973</code>), and returns <code>#true</code> if that year is a leap year, <code>#false</code> otherwise. (Look up the definition of a leap year–it’s not as simple as you think! For example, the year 1400 is not a leap year, but 1600 is.)</p></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">Boat race</span></h4><p>Write an animation function (that is, <code>boat-race : Number -&gt; Image</code>) such that <code>(animate boat-race)</code> shows two boats, traveling left to right, at different speeds. Both boats should stop when they reach the end of the screen.</p></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">4</span><span class="problem-name">Conversation</span></h4><p>Write an animation function (<code>conversation : Number -&gt; Image</code>) such that <code>(animate conversation)</code> shows two people (or other animal of your choice) meeting each other in a room (one should enter from the left, and one from the right) then stopping and saying “Hello!” to each other. We should see the word “Hello!” appear in one color, near one person’s mouth, and then afterward, in another color, near the other person’s mouth. The attached video should give an idea of what is expected!</p></div><div class="nobreak"><h4 class="extra-challenge keep-with-next">Extra Challenge: Car crash</h4><p>Define variables <code>CAR-1-X-SPEED, CAR-1-Y-SPEED, CAR-2-X-SPEED, CAR-2-Y-SPEED, CAR-1-START-X, CAR-1-START-Y, CAR-2-START-X, CAR-2-START-Y</code>. Then define a function <code>car-crash</code> that displays an animation in which two cars start at their respective start locations and travel at a constant speed in their respective directions (as determined by the speed variables, which might be negative, indicating “backward” movement). If the two cars hit each other, we should no longer see the cars on screen and only see some indication of the crash (perhaps the word “CRASH!” or an image of an explosion). Changing the variables you defined should change the animation accordingly, without having to modify other pieces of the code.</p></div></div>
+  </section>
+</body>

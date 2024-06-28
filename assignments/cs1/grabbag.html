@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A grab-bag of useful tricks</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a></div>
+          <h1 id="blogtitle">A grab-bag of useful tricks</h1>
+          <div id="blogcontent"><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Commenting out an expression</span></h4><p>Use <code>#;</code> before any Racket expression to comment it out:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="c1">; Because the 2 is commented out below,</span>
+<span class="c1">; (f x) will compute (+ x 3).</span>
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">f</span> <span class="n">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">+</span> <span class="n">x</span> <span class="c">#;</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1">; Here, we comment out the entire clause (posn-x p), and replace</span>
+<span class="c1">; it temporarily with 100.</span>
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">artist</span> <span class="n">p</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">place-image</span> <span class="n">BALL</span> <span class="c">#;</span><span class="p">(</span><span class="n">posn-x</span> <span class="n">p</span><span class="p">)</span> <span class="mi">100</span> <span class="p">(</span><span class="n">posn-y</span> <span class="n">p</span><span class="p">)</span> <span class="n">BG</span><span class="p">))</span>
+
+<span class="c1">; Below, the entire function is commented out.</span>
+<span class="c">#;</span><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">f</span> <span class="n">x</span><span class="p">)</span>
+   <span class="p">(</span><span class="nb">+</span> <span class="n">x</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1">; Or we can comment out the big-bang.</span>
+<span class="c">#;</span><span class="p">(</span><span class="n">big-bang</span> <span class="mi">0</span>
+    <span class="p">[</span><span class="n">to-draw</span> <span class="n">artist</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">on-tick</span> <span class="n">tock</span><span class="p">])</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Causing errors manually</span></h4><p>Use the <code>error</code> function to generate an error at any point in your program. This can be useful when debugging. For example:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">tock</span> <span class="n">ws</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="n">player-off-screen?</span> <span class="p">(</span><span class="n">player-pos</span> <span class="n">ws</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">error</span> <span class="s2">"The player has gone off screen, which should never happen!"</span><span class="p">)</span>
+    <span class="c1">; normal tock function below:</span>
+    <span class="k">...</span><span class="p">))</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">Switching to the full <code>racket</code> language</span></h4><p>Switching to the full Racket language gives you better debugging ability, and also access to <code>struct-copy</code>. To do so, change the language to “Determine language from source” in the language menu. Then put the following at the top of your code file:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="kn">#lang </span><span class="nn">racket</span>
+<span class="p">(</span><span class="k">require</span> <span class="n">2htdp/image</span><span class="p">)</span>
+<span class="p">(</span><span class="k">require</span> <span class="n">2htdp/universe</span><span class="p">)</span>
+<span class="p">(</span><span class="k">require</span> <span class="n">lang/posn</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>Change all your structs to include <code>#:transparent</code> at the end; for instance:</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="k">define-struct</span> <span class="n">student</span> <span class="p">[</span><span class="n">name</span> <span class="n">age</span> <span class="n">gender</span><span class="p">]</span> <span class="kd">#:transparent</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>You are now using full Racket.</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">4</span><span class="problem-name">Copying a struct</span></h4><p>If you are using full Racket, you can use the <code>struct-copy</code> feature, which allows you to make a copy of an existing struct value but with some fields changed. The syntax is</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="k">struct-copy</span> <span class="n">STRUCT-TYPE</span> <span class="n">STRUCT-VALUE</span>
+  <span class="p">[</span><span class="n">field-to-change-1</span>   <span class="n">new-value-1</span><span class="p">]</span>
+  <span class="p">[</span><span class="n">field-to-change-2</span>   <span class="n">new-value-2</span><span class="p">]</span>
+  <span class="k">...</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>For instance, if we are using the <code>student</code> definition from above, we can write code like this:</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="k">define</span> <span class="n">scooby</span> <span class="p">(</span><span class="n">make-student</span> <span class="s2">"Scooby Doo"</span> <span class="mi">15</span> <span class="s2">"Dog"</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="n">grow-one-year</span> <span class="n">st</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">struct-copy</span> <span class="n">student</span> <span class="n">st</span>
+    <span class="p">[</span><span class="n">age</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="p">(</span><span class="n">student-age</span> <span class="n">st</span><span class="p">))]))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="n">older-scooby</span> <span class="p">(</span><span class="n">grow-one-year</span> <span class="n">scooby</span><span class="p">))</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">5</span><span class="problem-name">Adding sound</span></h4><p>You will need to install the rsound library. Instructions coming soon!</p></div><p>If you are on a school computer, rsound is already installed. Use it by writing <code>(require rsound)</code> at the top of your file (if you are using full Racket, this should come <em>under</em> the other require statements).</p><p>Google “rsound documentation” for full documentation. The basics are:</p><ul><li><p><code>play</code> is a function that plays a sound and returns the string <code>"played sound"</code>.</p></li><li><p><code>andplay</code> is a function that takes in a sound and another value; it plays the sound as a side effect, then returns the other value.</p></li><li><p><code>ding</code> is a sound, as are <code>snare</code>, <code>kick</code>, and a bunch of others.</p></li><li><p>There are several functions to create sounds at other pitches. Check the documentation, and look for functions involving <code>piano-tone</code> and <code>synth-note</code>.</p></li></ul></div>
+  </section>
+</body>

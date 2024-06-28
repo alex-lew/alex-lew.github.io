@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>More practice with conditionals</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a></div>
+          <h1 id="blogtitle">More practice with conditionals</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>Practice makes perfect. In these problems, to be completed in class, you’ll get more practice with <code>if</code> and <code>cond</code>!</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Submission instructions</h3><p>Please write the following functions (with contracts) in a file called <code>YourNameBooleans2.rkt</code>. Upload this file to Google Classroom, and leave me a comment (on Classroom) explaining how you tested your code (<em>e.g.</em>, “I tested out each function in the interactions area”) and what happened (<em>e.g.</em>, “they all worked!“).</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Problems</h3><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Caught speeding</span></h4><p>You are driving a little too fast, and a police officer stops you. Write code to compute the result: “no ticket,” “small ticket,” or “big ticket.” If speed is 60 or less, the result is “no ticket”. If speed is between 61 and 80 inclusive, the result is “small ticket”. If speed is 81 or more, the result is “big ticket”. Unless it is your birthday–on that day, your speed can be 5 higher in all cases. The first argument is your speed, in MPH, and the second is whether or not it’s your birthday.</p></div></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">caught-speeding</span> <span class="mi">60</span> <span class="no">#false</span><span class="p">)</span> <span class="s2">"no ticket"</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">caught-speeding</span> <span class="mi">65</span> <span class="no">#false</span><span class="p">)</span> <span class="s2">"small ticket"</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">caught-speeding</span> <span class="mi">65</span> <span class="no">#true</span><span class="p">)</span> <span class="s2">"no ticket"</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Blackjack, part 1</span></h4><p>In the game of Blackjack, the goal is to make your score as close to 21 as possible without going over. For this problem, write a function that, given 2 Blackjack scores, returns whichever score is nearest to 21 without going over. If both scores go over 21, return 0.</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack</span> <span class="mi">19</span> <span class="mi">21</span><span class="p">)</span> <span class="mi">21</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack</span> <span class="mi">21</span> <span class="mi">19</span><span class="p">)</span> <span class="mi">21</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack</span> <span class="mi">19</span> <span class="mi">22</span><span class="p">)</span> <span class="mi">19</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack</span> <span class="mi">22</span> <span class="mi">23</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">Sum with no teens</span></h4><p>Given 3 numbers, return their sum.<br/>However, if any of the values is a teen–in the range 13..19 inclusive–then that value counts as 0,<br/>except that 15 and 16 do not count as a teens.</p></div><p>You will probably find it helpful to break this into smaller functions. For example, you may want to design a function <code>corrected-value : Number -&gt; Number</code> that takes in one number and returns what it counts as (itself or 0, depending on whether or not it’s a non-15/16 teen).</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">no-teen-sum</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">no-teen-sum</span> <span class="mi">2</span> <span class="mi">13</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">no-teen-sum</span> <span class="mi">2</span> <span class="mi">15</span> <span class="mi">14</span><span class="p">)</span> <span class="mi">17</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="extra-challenge keep-with-next">Extra Challenge: Making brick walls</h4><p>You are given three numbers: a goal, a number of big bricks, and a number of small bricks (in that order). You want to make a row of bricks that is EXACTLY <code>goal</code> inches long, using some or all of the provided bricks. Big bricks are 5 inches long, and small bricks are 1 inch long. Return <code>#true</code> if it is possible to make EXACTLY the goal by choosing from the given bricks.</p></div><p>This is a little harder than it looks. Also: it is possible to do this without using if or cond at all!</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">can-make-row?</span> <span class="mi">8</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="no">#true</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">can-make-row?</span> <span class="mi">9</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="no">#false</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">can-make-row?</span> <span class="mi">10</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="no">#true</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">can-make-row?</span> <span class="mi">8</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="no">#false</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">can-make-row?</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">10</span><span class="p">)</span> <span class="no">#true</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><div class="nobreak"><h4 class="extra-challenge keep-with-next">Extra Challenge: Blackjack, Part 2</h4><p>In the first Blackjack problem, you compared two players’ Blackjack scores. But how do we calculate these scores? In this problem, we assume a player’s hand has three cards, where each card is a number between 1 (Ace) and 13 (King). To get the score, you sum up the values of the cards: for example, if I have a 2, a 7, and a 10, then my score is 2 + 7 + 10 = 19. But there are two exceptions. First, anything above a 10 just counts as 10 points. Second, an ace (a 1) can count as 1 point OR 11 points–whichever is strategically best for the player. For example, if I have 10, 10, Ace (1), then my score is 21; I prefer to count the Ace as 1 point instead of 11 points, because 11 points would put me above 21. But if I have 5, 5, Ace (1), my score is also 21, not 11: I choose to count the Ace as 11 points.</p></div><p>Write a function <code>blackjack-3</code> that takes in three card values between 1 and 13, and computes the total score.</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">7</span><span class="p">)</span> <span class="mi">17</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">13</span> <span class="mi">11</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">25</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">1</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">)</span> <span class="mi">12</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">1</span> <span class="mi">5</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">21</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">2</span> <span class="mi">7</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">14</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">13</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">1</span> <span class="mi">12</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">12</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span> <span class="p">(</span><span class="n">blackjack-3</span> <span class="mi">1</span> <span class="mi">9</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">21</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div></div>
+  </section>
+</body>

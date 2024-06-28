@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111705087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111705087-1');
+  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A homework assignment from AP CSP at Commonwealth School. Practice encapsulation by writing a package in Go for adding progress bar functionality to any program.">
+  <title>Progress bar</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a><span class="breadcrumb-divider"></span><a href="/cs2.html">CS 2</a></div>
+          <h1 id="blogtitle">Progress bar</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>In this assignment, you will create a professional-looking “progress bar” package, that others can use to add progress bar functionality to their apps. (You may find it useful to use in your own projects!)</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Instructions</h3><p>Create a package called <code>progress</code>. It should expose a type called <code>ProgressBar</code>. Likely, you will choose to use a struct as the underlying type for your progress bar.</p></div><p>The type should have several public methods:</p><ul><li><p><code>func (pb *ProgressBar) Start(total int)</code>. This starts the progress bar. It prints an empty progress bar to the screen, which should look something like:</p><pre class="terminal">0 / 400 |----------------------------------------| 0.0%, calculating time remaining</pre><p>The argument, <code>total</code>, is how many items the user of your progress bar will be processing; in this case, it would be 400. The Start method also “remembers” the current time (using the <code>time.Now()</code> function). Why? As items complete (see the <code>Increment()</code> method below), your progress bar keeps track of the average amount of time necessary to complete an item. It will use this later to estimate “time remaining.”<br/><strong>Note: you should use <code>fmt.Print</code> or <code>fmt.Printf</code>, not <code>fmt.Println</code>. This will allow a future <code>fmt.Print</code> statement to <i>overwrite</i> this one, “updating” the progress bar.</strong></p></li><li><p><code>func (pb *ProgressBar) Increment()</code>. Assuming the progress bar has been <code>Start</code>ed, this completes one additional item, and redraws the progress bar, perhaps to look like this:</p><pre class="terminal">30 / 400 |==&gt;-------------------------------------| 7.5%, 1m2s remaining</pre><p>When printing the new progress bar, begin your line with <code>"\r"</code>, a “carriage return”, which causes the cursor to return to the beginning of the line and overwrite the previously written line.</p><p>A couple notes:</p><ol><li><p>In my example here, the progress bar contains 40 <code>-</code> characters. We calculate 7.5% of 40, which is 3, so we know 3 of them should be filled in. (In general, you can round down.) Two of the three, we fill in with an <code>=</code> symbol, and the third, with a <code>&gt;</code>, so that it looks like an arrow making forward movement. You may choose your own style if you don’t like this one (for example, maybe use the █ character [copy and paste it from here] for “filled in” parts of the progress bar, and ▂ for the rest), but the logic will be mostly the same.</p></li><li><p>Each time <code>Increment</code> is called, you should re-calculate the <i>average time per item</i>. Use the <code>time.Since(startTime)</code> function to calculate how long it has been since a certain time (the start time); this will return a value of type <code>time.Duration</code>. (Duration has underlying type <code>int64</code>, and represents a number of nanoseconds.) You can then divide this by the number of items processed so far to get the <i>average duration for processing an item</i>. (To do this, write, e.g., <code>avgDuration := totalDuration / time.Duration(itemsSoFar)</code>; since <code>itemsSoFar</code> and <code>totalDuration</code> are different types, you need to convert <code>itemsSoFar</code> into a ‘duration’ before using it in a division.) Multiply <i>this</i> number by <code>time.Duration(itemsLeftToProcess)</code>, which will give you the estimated time remaining. To turn this Duration value into something human-readable, use the <code>Minutes()</code> and <code>Seconds()</code> methods of the duration type, which return ints.</p></li><li><p>If a call to <code>Increment</code> finishes the progress bar, you should print a new line, ending the progress bar. Future calls to Increment should do nothing.</p></li></ol></li><li><p><code>(pb ProgressBar) IsActive() bool</code>. Returns <code>true</code> if the progress bar is “still active” (i.e., not finished yet), or <code>false</code> otherwise.</p></li></ul><p>You can add any other methods or functions you’d like, but they should not be public methods (i.e., use lowercase letters).</p><div class="nobreak"><h3 class="assignment-heading keep-with-next">Testing your code</h3><p>In a separate folder, create the following program:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">"fmt"</span>
+<span class="kn">import</span> <span class="s">"time"</span>
+<span class="kn">import</span> <span class="s">"math/rand"</span>
+<span class="c1">// you will also need to import your package</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Welcome. Now processing items..."</span><span class="p">)</span>
+
+  <span class="kd">var</span> <span class="nx">pb</span> <span class="nx">progress</span><span class="p">.</span><span class="nx">ProgressBar</span>
+
+  <span class="c1">// Say that we have 90 items to process, and keep processing</span>
+  <span class="c1">// while the progress bar is active.</span>
+  <span class="nx">pb</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+  <span class="k">for</span> <span class="nx">pb</span><span class="p">.</span><span class="nx">IsActive</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">pb</span><span class="p">.</span><span class="nx">Increment</span><span class="p">()</span>
+    <span class="nx">timeToProcess</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">(</span><span class="mi">300</span><span class="o">+</span><span class="nx">rand</span><span class="p">.</span><span class="nx">Intn</span><span class="p">(</span><span class="mi">200</span><span class="p">))</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span>
+    <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">timeToProcess</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Finished processing items."</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div></td></tr></tbody></table></div><p>You do not need to upload this main package, just use it to test your program. Upload your progress bar package as YourNameProgressBar.go. You should leave a Google Classroom comment describing how your testing went, and if there are any known bugs.</p></div>
+  </section>
+</body>

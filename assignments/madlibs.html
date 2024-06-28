@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111705087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111705087-1');
+  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A homework assignment from CS 1 at Commonwealth School. Use Python dictionaries to create a Madlibs game for your friends.">
+  <title>Mad libs</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a><span class="breadcrumb-divider"></span><a href="/cs1.html">CS 1</a></div>
+          <h1 id="blogtitle">Mad libs</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>To get some practice with dictionaries, in this assignment you’ll be writing a simple Mad Libs program in Python. The user will be able to enter a story as input, then run it for their friends. Using the program will look something like this:</p></div><pre class="terminal">Welcome to Mad Libs!
+Please type a story.
+<span class="user-input">I went to the {store}. It was {big} and {expensive}. While I was there, I bought a {humungous} {rat}. The {rat} became my {pet}. I love it very much. I hope to go to the {store} again one day.</span>
+Please enter the part of speech of each of the following words:
+store: <span class="user-input">noun</span>
+big: <span class="user-input">adjective</span>
+expensive: <span class="user-input">adjective</span>
+humungous: <span class="user-input">adjective</span>
+rat: <span class="user-input">noun</span>
+pet: <span class="user-input">noun</span>
+Got it! Now, recruit a friend to play your story. Press enter to continue.
+
+----------------MAD LIBS STORY-----------------
+Let’s create your story!
+Enter noun: <span class="user-input">bank</span>
+Enter adjective: <span class="user-input">tasty</span>
+Enter adjective: <span class="user-input">fluffy</span>
+Enter adjective: <span class="user-input">green</span>
+Enter noun: <span class="user-input">airplane</span>
+Enter noun: <span class="user-input">family</span>
+OK, let’s see what you wrote!
+
+I went to the bank. It was tasty and fluffy. While I was there, I bought a green airplane. The airplane became my family. I love it very much. I hope to go to the bank again one day.</pre><p>Notice how this works. When entering the story, I can put certain words in braces. The program then prompts me to tell it the part of speech of all words in braces. <strong>If a word appears twice in braces, we assume it corresponds to only <i>one</i> blank in the game; it will always be filled in with the same value.</strong> Once we’ve gotten the parts of speech, we ask a new person to enter values for the parts of speech, and then replace the braces words with the actual words.</p><div class="nobreak"><h3 class="assignment-heading keep-with-next">Implementation</h3><p>You’ll be using two dictionaries to create your program:</p></div><ol><li><p>A dictionary that allows you to lookup words (like “big”) and get out parts of speech (like “adjective”).</p></li><li><p>A dictionary that allows you to lookup words (like “store”) and get out replacement words (like “bank”).</p></li></ol><p>Let’s walk through, step by step. This <a href="http://wiki.openhatch.org/Python_data_types_cheat_sheet">cheat sheet</a> might be helpful.</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Get a list of words in braces {…}</span></h4><p>Write a function <code>extract_braced_words</code> that takes as its argument a “story string” in which certain words are surrounded by braces. It should return a list of all the braces-surrounded words. For example, if the input is the story from above, the output of this function should be <code>["store", "big", "expensive", "humungous", "rat", "pet"]</code>.</p></div><p>The best way to do this is as follows:</p><ul><li><p>Use the <code>find</code> method on the story string to find the first <code>{</code> and the first <code>}</code>. (For example, <code>story.find('{')</code>.) Remember that <code>find</code> returns the index at which a character occurs, or -1 if the character doesn’t occur.</p></li><li><p>Slice the string (you can slice strings, not just lists) using the indices found above, to get out the first braces-surrounded word.</p></li><li><p>Set <code>story</code> to <code>story[indexOfRightBrace+1:]</code> to chop off everything up to and including the first braced word.</p></li><li><p>Repeat all these steps, adding new words to a list, until you can’t find any more braces.</p></li></ul><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Ask for parts of speech</span></h4><p>Write a function <code>get_parts_of_speech</code> which takes as its argument a list of words, and asks the user to enter the part of speech for each of them. It returns a dictionary that allows you to look up a part of speech for a certain word.</p></div><p>So, if I call <code>get_parts_of_speech(["big", "apple", "walk"])</code>, I’ll see the following on my screen:</p><pre class="terminal">Please enter part of speech for each of the following words.
+big: <span class="user-input">adjective</span>
+apple: <span class="user-input">noun</span>
+walk: <span class="user-input">verb</span></pre><p>and the function should return <code>{"big": "adjective", "apple": "noun", "walk": "verb"}</code>, so that if the return value is called <code>parts_of_speech</code>, I can run <code>parts_of_speech["apple"]</code> and get back <code>"noun"</code>, for instance.</p><p>To do this, create an empty dictionary, <code>{}</code>, and add to it as you loop through the list of words, asking the user to enter parts of speech.</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">Ask for replacement words</span></h4><p>Write a function <code>get_word_replacements</code> that takes as its argument a dictionary of words to parts of speech. This function creates a new dictionary, mapping words to replacements suggested by the “player” of the Mad Libs game.</p></div><p>The general structure is this:</p><ul><li><p>Create an empty dictionary of replacements.</p></li><li><p>Loop through the words in the part-of-speech dictionary, using:</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">parts_of_speech</span><span class="p">:</span>
+</pre></div></td></tr></tbody></table></div></li><li><p>Inside the loop, ask the user for a replacement word, by prompting them to enter a word of the correct part of speech. For example, if the word is “big”, then <code>parts_of_speech[word]</code> will be <code>"adjective"</code>, and you should ask the user to <code>Enter adjective:</code>.</p></li><li><p>When the user enters a replacement, add it to the <code>replacements</code> dictionary, so that <code>replacements["big"]</code> is the new word for “big”, for example, “tasty”.</p></li><li><p>Once the loop is done, return the replacements.</p></li></ul><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">4</span><span class="problem-name">Do the replacements</span></h4><p>Write a function <code>do_replacements</code> that takes two arguments: a story string (with braces-surrounded words), and a dictionary of replacements to apply.</p></div><p>Loop through the replacements, and for each one, change the story string so that every occurrence of word surrounded in braces is replaced with <code>replacements[word]</code>.</p><p>Remember that there is a <code>replace</code> method for strings, which takes in an <code>old</code> and <code>new</code> string, and replaces all copies of <code>old</code> with <code>new</code>.</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">5</span><span class="problem-name">Put it all together</span></h4><p>Outside of any function, below your other function definitions, write the main program. It should:</p></div><ul><li><p>Print out “Welcome to Mad Libs.”</p></li><li><p>Print out “Enter a story.”</p></li><li><p>Ask the user to input a story, and store the story in a variable.</p></li><li><p>Call <code>extract_braced_words</code> on the story, to get a list of <code>words_to_replace</code>.</p></li><li><p>Call <code>get_parts_of_speech</code> on the list of <code>words_to_replace</code>, to get a dictionary of <code>parts_of_speech</code>.</p></li><li><p>Print <code>"---------------- MAD LIBS STORY -----------------"</code></p></li><li><p>Print <code>"Let’s create your story!"</code></p></li><li><p>Call <code>get_word_replacements</code> to get a dictionary of <code>word_replacements</code>.</p></li><li><p>Call <code>do_replacements</code> on the story and the <code>word_replacements</code>, to get a new version of the story.</p></li><li><p>Print <code>"OK, let’s see what you wrote!"</code></p></li><li><p>Print the new story.</p></li></ul></div>
+  </section>
+</body>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Using type declarations</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a></div>
+          <h1 id="blogtitle">Using type declarations</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>In this assignment, you will practice writing type declarations and functions by creating several simple but (arguably) useful types based on ints and strings. Each problem will ask you to create a type with some functions that work with that type. <strong>You must also write a <code>main</code> function, which creates at least one value of each type and tests its functions.</strong></p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Problems</h3><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">Name</span></h4><p>Create a type <code>name</code>, with underlying type <code>string</code>. Also write the following functions:</p></div></div><ul><li><p><code>greet(n name)</code>, which returns a string greeting of your choosing to the person with the given name.</p></li><li><p><code>opening(n name, salutation string)</code>, which creates a letter opening to someone with this name, using the given salutation.</p></li><li><p><code>closing(n name, signoff string)</code>, which creates a letter closing from someone with this name, using the given signoff.</p></li></ul><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Christmas Tree</span></h4><p>Create a type <code>christmasTree</code>, with underlying type <code>int</code>, representing its height. Write a <code>draw</code> function that causes a christmas tree of the given height, made out of # and | characters, to the Terminal. For instance, <code>draw(christmasTree(4))</code> would print</p></div><pre class="terminal">   #
+  ###
+ #####
+#######
+  |||</pre><p>Note: the number of # characters is always odd, and increases from top to bottom of tree. The trunk is always the same height.</p><div class="nobreak"><h4 class="extra-challenge keep-with-next">Extra Challenge: ISBN</h4><p>ISBN numbers uniquely identify books. So that it’s easy to check that an ISBN number is valid, and hasn’t been corrupted somehow (e.g., someone accidentally copying a digit wrong), real ISBN numbers all have the property that if you add up the digits, multiplying each by the <i>index</i> of the digit you’re on, you get a multiple of 11. For a fuller explanation, see the Wikipedia page (<a href="https://en.wikipedia.org/wiki/International_Standard_Book_Number#ISBN-10_check_digits">click here</a>).</p></div><p>Design a type <code>isbn</code>, backed by either <code>string</code> or <code>int</code> (your choice). It should have two functions:</p><ul><li><p><code>printIsbn(id isbn)</code>, which prints the ten-digit ISBN number out.</p></li><li><p><code>isValid(id isbn)</code>, which returns a boolean representing whether the number is valid or not.</p></li></ul><p>Note: if you choose to use an <code>int</code>, you should know that in Go, typing a number with leading 0s causes it to be interpreted <i>in base 8</i>. So if your ISBN number begins with 0, you still encode it by writing <code>isbn(...)</code>, where <code>...</code> has no leading 0s.</p></div>
+  </section>
+</body>

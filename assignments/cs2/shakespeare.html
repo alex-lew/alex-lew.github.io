@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111705087-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111705087-1');
+  </script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A homework assignment from AP CSP at Commonwealth School. Generate Shakespearean gibberish by analyzing his complete works.">
+  <title>Shakespearean robots</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700|Source+Code+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="/monokai.css">
+  <link rel="stylesheet" href="/tango.css" media="print">
+</head>
+<body>
+
+  <section id="post">
+<div id="breadcrumbs"><a href="/index.html">alex lew</a><span class="breadcrumb-divider"></span><a href="/cs2.html">CS 2</a></div>
+          <h1 id="blogtitle">Shakespearean robots</h1>
+          <div id="blogcontent"><div class="nobreak"><h3 class="assignment-heading keep-with-next">Assignment overview</h3><p>In this assignment, you will create a program that talks like Shakespeare! You’ll do this using a natural language processing technique called “N-gram Language Modeling.”</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Reading the file</h3><p>Please download shakespeare.txt, which contains the complete works of William Shakespeare. Save it to your program’s directory, next to your .go file. Recall that to read the contents of a file into a string, you can use the following code:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="nx">contents</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nx">ReadFile</span><span class="p">(</span><span class="s">"shakespeare.txt"</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Fprintf</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stderr</span><span class="p">,</span> <span class="s">"Error reading file %s: %s\n"</span><span class="p">,</span> <span class="s">"shakespeare.txt"</span><span class="p">,</span> <span class="nx">err</span><span class="p">.</span><span class="nx">Error</span><span class="p">())</span>
+    <span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">words</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">Fields</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">contents</span><span class="p">))</span>
+</pre></div></td></tr></tbody></table></div><p>In this code, <code>contents</code> holds a slice of bytes (representing the individual characters in the file), which is then converted into a string and passed to the <code>strings.Fields</code> function. This function, in the <code>strings</code> package, consumes a string and produces a slice of strings, each representing one word of the original string. By default, it separates words on whitespace.</p><div class="nobreak"><h3 class="assignment-heading keep-with-next">Analyzing the text</h3><p>Once you have a slice of all the words Shakespeare ever wrote, it is time to analyze the text. The goal is to figure out, <em>for each word</em>, which words usually follow it. More precisely, given some word (like “thou”), you should know how many times any other word (“hast”, “dost”, “knowest”) occurred <em>immediately after</em> it.</p></div><p>To store this information, you will use Go maps. At the top level, you will have an <strong>analysis</strong>, which is a <code>map[string]wordcount</code>. The key of the map is a word; the value is a <code>wordcount</code>, a type you will write shortly that stores statistics on the number of times different words appear. For example, <code>analysis["the"]</code> would contain a <code>wordcount</code> counting the number of times each word in the text appeared immediately following the word “the.”</p><p>A <code>wordcount</code> is a struct, containing two values:</p><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="kd">type</span> <span class="nx">wordcount</span> <span class="kd">struct</span> <span class="p">{</span>
+  <span class="nx">counts</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span>
+  <span class="nx">total</span>  <span class="kt">int</span>
+<span class="p">}</span>
+</pre></div></td></tr></tbody></table></div><p>The idea here is that the <code>counts</code> map stores the actual statistics: “prince” occurred 3 times, “king” occurred 5 times, and so on. The <code>total</code> stores the total sum of all ints in the <code>counts</code> map. This allows you to easily compute, say, the fraction of times “prince” occurs in some context: just divide <code>counts["prince"]</code> by <code>total</code>.</p><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">1</span><span class="problem-name">A method for observing words</span></h4><p>Write a method <code>func (w wordcount) observeWord(word string) wordcount</code>, which causes the wordcount to update its statistics in response to observing a certain word, and returns the new wordcount. In particular, the <code>total</code> should go up by 1, as should the value of <code>counts[word]</code> (where <code>word</code> is the argument, the word that was observed). Remember that when a new <code>wordcount</code> is created, the <code>counts</code> map will be <code>nil</code>; check for this possibility, and if it is <code>nil</code>, <code>make(...)</code> the map before trying to add to it.</p></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">2</span><span class="problem-name">Build the analysis</span></h4><p>In your <code>main</code> function, after you obtain the <code>words</code> slice, loop through it and build up your <code>analysis</code>, which (again) is a <code>map[string]wordcount</code>. Every time you observe two words in a row, <code>word1</code> and then <code>word2</code>, call <code>observeWord(word2)</code> on the <code>wordcount</code> associated with <code>word1</code>, storing the result of <code>observeWord</code> (the updated <code>wordcount</code>) back in the analysis map. At the end of your processing, if I want to find out how many times the phrase “thou hast” occurs in Shakespeare, I should be able to write <code>analysis["thou"].counts["hast"]</code>.</p></div><div class="nobreak"><h3 class="assignment-heading keep-with-next">Generating new text</h3><p>Now, it’s time to generate the text.</p></div><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">3</span><span class="problem-name">A method for choosing a random word</span></h4><p>Create a method <code>(w wordcount) generateRandomWord() string</code> for <code>wordcount</code>s that picks a random word based on the statistics it’s storing. That is, if the <code>wordcount</code> has observed “prince” 5 times and “princess” 4 times, it should generate “prince” with probability 5/9 and “princess” with probability 4/9.</p></div><p>One way to do this is (as we discussed in class) to generate a random integer between 0 and <code>total-1</code>. Use <code>rand.Intn(total)</code> to do this. Then, loop through the entries of the <code>counts</code> map, subtracting the stored number from your random integer. When the integer goes below 0, whichever word you’re currently processing is your random word. Here is a visualization of the process:</p><pre class="terminal">total observed: 26
+random number:  16
+
+the   10        -10  = 6
+sad    3        -3   = 3
+happy  5        -5   = -2, so "happy" is the word
+what   8</pre><div class="nobreak"><h4 class="assignment-problem keep-with-next"><span class="problem-number">4</span><span class="problem-name">Generate the random text</span></h4><p>Prompt the user for a word to begin Shakespeare’s new opus with:</p></div><div class="highlight"><table class="sourcetable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="kd">var</span> <span class="nx">startingWord</span> <span class="kt">string</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">"Enter a starting word: "</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Scanln</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">startingWord</span><span class="p">)</span>
+</pre></div></td></tr></tbody></table></div><p>Then, use <code>analysis[startingWord].generateRandomWord()</code> to generate the next word. Use <em>that</em> word to generate the <em>next</em> word using the same strategy. Keep doing this, in a loop, at least 100 times. (You can decide how long you want Shakespeare’s new text to be.) Print each word as you generate it, putting spaces between them.</p><div class="nobreak"><h3 class="assignment-heading keep-with-next">Submission</h3><p>Please submit your code in a file named <code>YourNameShakespeare.go</code>. Leave a Google Classroom comment describing how you tested your code.</p></div></div>
+  </section>
+</body>
